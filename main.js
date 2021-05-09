@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
-const cfg = require('./config.json');
-const admins = require('./admins.json');
+const cfg = require('./impt data/config.json');
+const admins = require('./impt data/admins.json');
 const fs = require('fs');
 const token = cfg.token;
 const language = cfg.lang;
@@ -37,7 +37,7 @@ function todfunc(timestamp) {
       }
 }
 function parceids() {
-    const dir = 'users settings/'
+    const dir = './users settings'
     fs.readdir(dir,(err,files) => {
         console.log(files.length + 'parced');
         var usedids = Array(files.length);
