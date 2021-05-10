@@ -9,8 +9,14 @@ const bot = new TelegramBot(token,{polling:true});
 console.log(localisation.curloc);
 parceids();
 firstmessage = true;
-var permmisions = ['superadmin','user','party finder']
-
+var permmisions = ['superadmin','user','party finder'];
+var usedids = new Array;
+let firstdata = 
+{
+  'userlang':'',
+  'dpn':'' //default party
+}
+let data = JSON.stringify(firstdata);
 
 function checklvl(id) //Check admin's lvl of user
  {
@@ -39,10 +45,9 @@ function todfunc(timestamp) {
 function parceids() {
     const dir = './users settings'
     fs.readdir(dir,(err,files) => {
-        console.log(files.length + 'parced');
-        var usedids = Array(files.length);
+        console.log(files.length + ' user files parced');
         for(a=0;a<files.length;a++){
-            console.log(files);
+            usedids[a]=files[a];
         }
     }); 
 }
@@ -57,6 +62,16 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const seclvl = checklvl(msg.from.id);
     const tod = todfunc(msg.date); //Times of Day
+    for(z=0;z<usedids.length;z++){
+        if(usedids[z].slice(0,-5)==msg.from.id){    
+                  firstmessage = false;
+                  break;
+        }
+        if(usedids.length-1===z){
+                fs.writeFileSync('./user settings/'+msg.from.id+'.json',data);
+                bot.sendMessage(chatId,localisation.langquestion);
+        }
+    }
 
     if(firstmessage){
     switch (seclvl) {
@@ -68,6 +83,9 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
             bot.sendMessage(chatId, tod+localisation.usrhellomsg) //User hello message
             break;
     }
+   }
+   switch (msg.text) {
+       case '':
    }
 
   });
